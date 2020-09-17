@@ -92,9 +92,9 @@ const App = () => {
   })
 
   // get days
-  let start = new Date('2020-09-13')
+  let start = new Date('2020-09-13 00:00:00')
   let now = new Date()
-  let diff = (Math.round((now - start)/86400000))
+  let diff = (Math.floor((now - start)/86400000))
 
   useEffect(() => {
     fetchData()
