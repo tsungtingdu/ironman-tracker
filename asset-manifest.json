@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/ironman-tracker/static/css/main.939b5ff8.chunk.css",
-    "main.js": "/ironman-tracker/static/js/main.ed29fbfa.chunk.js",
-    "main.js.map": "/ironman-tracker/static/js/main.ed29fbfa.chunk.js.map",
+    "main.js": "/ironman-tracker/static/js/main.bbbff9d6.chunk.js",
+    "main.js.map": "/ironman-tracker/static/js/main.bbbff9d6.chunk.js.map",
     "runtime-main.js": "/ironman-tracker/static/js/runtime-main.83a19e06.js",
     "runtime-main.js.map": "/ironman-tracker/static/js/runtime-main.83a19e06.js.map",
-    "static/js/2.6de26936.chunk.js": "/ironman-tracker/static/js/2.6de26936.chunk.js",
-    "static/js/2.6de26936.chunk.js.map": "/ironman-tracker/static/js/2.6de26936.chunk.js.map",
+    "static/js/2.8fad8d97.chunk.js": "/ironman-tracker/static/js/2.8fad8d97.chunk.js",
+    "static/js/2.8fad8d97.chunk.js.map": "/ironman-tracker/static/js/2.8fad8d97.chunk.js.map",
     "index.html": "/ironman-tracker/index.html",
-    "precache-manifest.2ad81d1e6ab7981d42d21bf434080d37.js": "/ironman-tracker/precache-manifest.2ad81d1e6ab7981d42d21bf434080d37.js",
+    "precache-manifest.0ceb77159764084f3fc3942d79dbb707.js": "/ironman-tracker/precache-manifest.0ceb77159764084f3fc3942d79dbb707.js",
     "service-worker.js": "/ironman-tracker/service-worker.js",
     "static/css/main.939b5ff8.chunk.css.map": "/ironman-tracker/static/css/main.939b5ff8.chunk.css.map",
-    "static/js/2.6de26936.chunk.js.LICENSE.txt": "/ironman-tracker/static/js/2.6de26936.chunk.js.LICENSE.txt"
+    "static/js/2.8fad8d97.chunk.js.LICENSE.txt": "/ironman-tracker/static/js/2.8fad8d97.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.83a19e06.js",
-    "static/js/2.6de26936.chunk.js",
+    "static/js/2.8fad8d97.chunk.js",
     "static/css/main.939b5ff8.chunk.css",
-    "static/js/main.ed29fbfa.chunk.js"
+    "static/js/main.bbbff9d6.chunk.js"
   ]
 }
