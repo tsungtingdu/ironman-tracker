@@ -22,7 +22,6 @@ const AppContainer = styled.div`
     background-color: #282c34;
     color: #ffffff;
 `
-
 const TitleContainer = styled.div`
   display: flex;
   flex-flow: column;
@@ -37,7 +36,6 @@ const TitleContainer = styled.div`
   background-color: #282c34;
   padding: 20px;
 `
-
 const TeamName = styled.div`
   font-size: 30px;
   font-weight: 700;
@@ -47,8 +45,15 @@ const Days = styled.div`
   font-size: 20px;
   font-weight: 700;
 `
-
-
+const LinkToPage = styled.div`
+  a {
+    color: #000000;
+    text-decoration: none;
+    :hover {
+      color: blue;
+    }
+  }
+`
 const TableWrapper = styled.div`
   width: 50%;
   margin-top: 100px;
@@ -73,7 +78,7 @@ const useStyles = makeStyles({
     fontWeight: "700",
   },
   drow: {
-    backgroundColor: "#ff6781",
+    backgroundColor: "#ffb3b3",
   }
 })
 
@@ -121,7 +126,7 @@ const App = () => {
                 {data.map((row) => (
                   <TableRow key={row[0]} className={(diff === Number(row[2])) ? null : ( row[2] ? classes.drow : null)}>
                     <TableCell component="th" scope="row" className={classes.cell}>
-                      {row[0]}
+                      <LinkToPage><a href={row[1]} target="_blank">{row[0]}</a></LinkToPage>
                     </TableCell>
                     <TableCell align="right" className={classes.cell}>{row[2]}</TableCell>
                   </TableRow>

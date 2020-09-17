@@ -1,7 +1,7 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
 
-const crawler =  async (arr) => {
+const crawler = async (arr) => {
   for (let i = 0; i < arr.length; i++) {
     let url = arr[i][1]
     await axios.get(url).then(res => {
