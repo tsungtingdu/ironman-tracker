@@ -87,8 +87,12 @@ const App = () => {
   const [data, setData] = useState(members)
   const fetchData = useCallback(async () => {
     let tempData = Array.from(data)
-    tempData = await crawler(tempData)
-    setData(tempData)
+    for (let i = 0; i < tempData.length; i++) {
+      if (!tempData[i][2]) {
+        tempData[i] = await crawler(tempData[i])
+        setData(tempData)
+      }
+    }    
   })
 
   // get days
