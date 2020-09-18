@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Moment from 'react-moment'
+import { CircularProgress } from '@material-ui/core'
 
 const AppContainer = styled.div`
     width: 100%;
@@ -61,6 +62,12 @@ const TableWrapper = styled.div`
   border-radius: 4px;
   margin-bottom: 50px;
 `
+const ProgressWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
 const useStyles = makeStyles({
   table: {
     width: "100%",
@@ -79,7 +86,12 @@ const useStyles = makeStyles({
   },
   drow: {
     backgroundColor: "#ffb3b3",
-  }
+  },
+  styledProgress: {
+    color: '#282c34',
+    height: '20px !important',
+    width: '20px !important',
+  },
 })
 
 const App = () => {
@@ -132,7 +144,10 @@ const App = () => {
                     <TableCell component="th" scope="row" className={classes.cell}>
                       <LinkToPage><a href={row[1]} target="_blank">{row[0]}</a></LinkToPage>
                     </TableCell>
-                    <TableCell align="right" className={classes.cell}>{row[2]}</TableCell>
+                    <TableCell align="right" className={classes.cell}>{row[2] ? row[2] : (
+                      <ProgressWrapper>
+                        <CircularProgress className={classes.styledProgress}/>
+                      </ProgressWrapper>)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
