@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8cbaf9e40e59f2ed54d0854ff734b57c",
+    "revision": "55b16d10b87cdf27269e5fed06cf987b",
     "url": "/ironman-tracker/index.html"
   },
   {
-    "revision": "f3d24d9d9838b836bb9a",
+    "revision": "27647bb79ff72304515a",
     "url": "/ironman-tracker/static/css/main.939b5ff8.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ironman-tracker/static/js/2.f2e18528.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "f3d24d9d9838b836bb9a",
-    "url": "/ironman-tracker/static/js/main.0f2a7a83.chunk.js"
+    "revision": "27647bb79ff72304515a",
+    "url": "/ironman-tracker/static/js/main.fbcc1f42.chunk.js"
   },
   {
     "revision": "c0d53da2ef5df57898b7",
