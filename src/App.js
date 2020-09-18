@@ -102,7 +102,7 @@ const App = () => {
     for (let i = 0; i < tempData.length; i++) {
       if (!tempData[i][2]) {
         tempData[i] = await crawler(tempData[i])
-        setData(tempData)
+        setData(tempData.sort((a ,b) => a[2] - b[2]))
       }
     }    
   })
