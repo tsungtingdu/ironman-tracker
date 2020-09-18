@@ -102,7 +102,13 @@ const App = () => {
     for (let i = 0; i < tempData.length; i++) {
       if (!tempData[i][2]) {
         tempData[i] = await crawler(tempData[i])
-        setData(tempData.sort((a ,b) => a[2] - b[2]))
+        setData(tempData.sort((a ,b) => { 
+          if (a[2] === b[2]) {
+            return a[0].localeCompare(b[0])
+          } else {
+           return a[2] - b[2]
+          }  
+        }))
       }
     }    
   })
