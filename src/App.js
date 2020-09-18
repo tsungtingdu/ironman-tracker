@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import styled from 'styled-components'
-import crawler from './crawler'
-import members from './members'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect, useState } from 'react'
+
+import { CircularProgress } from '@material-ui/core'
+import Moment from 'react-moment'
+import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import Moment from 'react-moment'
-import { CircularProgress } from '@material-ui/core'
+import crawler from './crawler'
+import { makeStyles } from '@material-ui/core/styles'
+import members from './members'
+import styled from 'styled-components'
 
 const AppContainer = styled.div`
     width: 100%;
@@ -94,40 +95,74 @@ const useStyles = makeStyles({
   },
 })
 
-const App = () => {
-  const classes = useStyles()
-  const [data, setData] = useState(members)
-  const fetchData = useCallback(async () => {
-    let tempData = Array.from(data)
-    for (let i = 0; i < tempData.length; i++) {
-      if (!tempData[i][2]) {
-        tempData[i] = await crawler(tempData[i])
-        setData(tempData.sort((a ,b) => { 
-          if (a[2] === b[2]) {
-            return a[0].localeCompare(b[0])
-          } else {
-           return a[2] - b[2]
-          }  
-        }))
-      }
-    }    
-  })
+const refactorData = (members) => {
+  return members.reduce((dataRefactored, curr) => {
+    const [name, url] = curr;
+    return dataRefactored.concat({
+      name,
+      url,
+      postCount: null,
+    });
+  }, []);
+};
 
-  // get days
-  let start = new Date('2020-09-13 00:00:00')
-  let now = new Date()
-  let diff = (Math.floor((now - start)/86400000))
+const fetchData = (data) => {
+  const dataWithPostCounts = data.map(async (d) => {
+    const { name, url } = d;
+    const postCount = await crawler(url);
+
+    return { name, url, postCount };
+  });
+
+  return Promise.all(dataWithPostCounts);
+};
+
+const sortData = (data) => {
+  return data.sort((a ,b) => {
+    if (a.postCount === b.postCount) {
+      return a.name.localeCompare(b.name)
+    } else {
+     return a.postCount - b.postCount
+    }
+  })
+}
+
+const App = () => {
+  const classes = useStyles();
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchData()
-  }, [data])
+    const membersRefactored = refactorData(members);
+    setData(membersRefactored);
+  }, []);
+
+  // get days
+  let start = new Date('2020-09-13 00:00:00');
+  let now = new Date();
+  let diff = Math.floor((now - start) / 86400000);
+
+  useEffect(() => {
+    if (data.length === 0) {
+      return;
+    }
+
+    const gotAllPosts = data.every(({ postCount }) => postCount);
+    if (gotAllPosts) {
+      return;
+    }
+
+    fetchData(data).then((res) => {
+      const sortedData = sortData(res)
+      setData(sortedData);
+    });
+  }, [data]);
 
   return (
     <AppContainer>
       <TitleContainer>
         <TeamName>#OutcomeFirst</TeamName>
         <Days>
-          開賽第 
+          開賽第
           <Moment diff="2020-09-13" unit="days">
              {new Date()}
           </Moment>
@@ -145,12 +180,12 @@ const App = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((row) => (
-                  <TableRow key={row[0]} className={(diff === Number(row[2])) ? null : ( row[2] ? classes.drow : null)}>
+                {data.map(({ name, url, postCount }) => (
+                  <TableRow key={name} className={(diff === Number(postCount)) ? null : ( postCount ? classes.drow : null)}>
                     <TableCell component="th" scope="row" className={classes.cell}>
-                      <LinkToPage><a href={row[1]} target="_blank">{row[0]}</a></LinkToPage>
+                      <LinkToPage><a href={url} target="_blank" rel="noopener noreferrer">{name}</a></LinkToPage>
                     </TableCell>
-                    <TableCell align="right" className={classes.cell}>{row[2] ? row[2] : (
+                    <TableCell align="right" className={classes.cell}>{postCount ? postCount : (
                       <ProgressWrapper>
                         <CircularProgress className={classes.styledProgress}/>
                       </ProgressWrapper>)}</TableCell>
