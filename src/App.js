@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 
-import { CircularProgress } from '@material-ui/core'
 import Moment from 'react-moment'
 import Paper from '@material-ui/core/Paper'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import crawler from './crawler'
+import Spinner from './components/Spinner'
+import crawler from './utils/crawler'
 import { makeStyles } from '@material-ui/core/styles'
-import members from './members'
+import members from './data/members'
 import styled from 'styled-components'
 
 const AppContainer = styled.div`
@@ -63,12 +58,7 @@ const TableWrapper = styled.div`
   border-radius: 4px;
   margin-bottom: 50px;
 `
-const ProgressWrapper = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`
+
 const useStyles = makeStyles({
   table: {
     width: "100%",
@@ -86,7 +76,7 @@ const useStyles = makeStyles({
     fontWeight: "700",
   },
   drow: {
-    backgroundColor: "#ffb3b3",
+    backgroundColor: "#ffcbcb",
   },
   styledProgress: {
     color: '#282c34',
@@ -130,6 +120,7 @@ const sortData = (data) => {
 const App = () => {
   const classes = useStyles();
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const membersRefactored = refactorData(members);
@@ -148,6 +139,7 @@ const App = () => {
 
     const gotAllPosts = data.every(({ postCount }) => postCount);
     if (gotAllPosts) {
+      setIsLoading(false)
       return;
     }
 
@@ -159,6 +151,7 @@ const App = () => {
 
   return (
     <AppContainer>
+      <Spinner isLoading={isLoading} />
       <TitleContainer>
         <TeamName>#OutcomeFirst</TeamName>
         <Days>
@@ -169,7 +162,7 @@ const App = () => {
           天
         </Days>
       </TitleContainer>
-      { data.length > 0 ? (
+      { data.length > 0 && (
         <TableWrapper>
           <TableContainer component={Paper} className={classes.table}>
             <Table size="small" aria-label="a dense table">
@@ -185,17 +178,16 @@ const App = () => {
                     <TableCell component="th" scope="row" className={classes.cell}>
                       <LinkToPage><a href={url} target="_blank" rel="noopener noreferrer">{name}</a></LinkToPage>
                     </TableCell>
-                    <TableCell align="right" className={classes.cell}>{postCount ? postCount : (
-                      <ProgressWrapper>
-                        <CircularProgress className={classes.styledProgress}/>
-                      </ProgressWrapper>)}</TableCell>
+                    <TableCell align="right" className={classes.cell}>
+                      {postCount}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </TableWrapper>
-      ) : ''}
+      )}
     </AppContainer>
   )
 }
