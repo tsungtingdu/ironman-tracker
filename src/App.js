@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
+import React, { useEffect, useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 
-import Moment from 'react-moment'
-import Paper from '@material-ui/core/Paper'
-import Spinner from './components/Spinner'
-import crawler from './utils/crawler'
-import { makeStyles } from '@material-ui/core/styles'
-import members from './data/members'
-import styled from 'styled-components'
+import Moment from 'react-moment';
+import Paper from '@material-ui/core/Paper';
+import Spinner from './components/Spinner';
+import crawler from './utils/crawler';
+import { makeStyles } from '@material-ui/core/styles';
+import members from './data/members';
+import styled from 'styled-components';
 
 const AppContainer = styled.div`
-    width: 100%;
-    display: flex;
-    position: relative;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #282c34;
-    color: #ffffff;
-`
+  width: 100%;
+  display: flex;
+  position: relative;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
+  color: #ffffff;
+`;
 const TitleContainer = styled.div`
   display: flex;
   flex-flow: column;
@@ -32,16 +39,16 @@ const TitleContainer = styled.div`
   left: 0;
   background-color: #282c34;
   padding: 20px;
-`
+`;
 const TeamName = styled.div`
   font-size: 30px;
   font-weight: 700;
-`
+`;
 const Days = styled.div`
   padding: 10px;
   font-size: 20px;
   font-weight: 700;
-`
+`;
 const LinkToPage = styled.div`
   a {
     color: #000000;
@@ -50,105 +57,104 @@ const LinkToPage = styled.div`
       color: blue;
     }
   }
-`
+`;
 const TableWrapper = styled.div`
   width: 50%;
   margin-top: 100px;
   border: 1px solid #ffffff;
   border-radius: 4px;
   margin-bottom: 50px;
-`
+`;
 
 const useStyles = makeStyles({
   table: {
-    width: "100%",
+    width: '100%',
   },
   header: {
-    backgroundColor: "#333333"
+    backgroundColor: '#333333',
   },
   headerCell: {
-    color: "#ffffff",
-    fontFamily: "Source Code Pro",
-    fontWeight: "700",
+    color: '#ffffff',
+    fontFamily: 'Source Code Pro',
+    fontWeight: '700',
   },
   cell: {
-    fontFamily: "Source Code Pro",
-    fontWeight: "700",
+    fontFamily: 'Source Code Pro',
+    fontWeight: '700',
   },
   drow: {
-    backgroundColor: "#ffcbcb",
+    backgroundColor: '#ffcbcb',
   },
   styledProgress: {
     color: '#282c34',
     height: '20px !important',
     width: '20px !important',
   },
-})
-
-const refactorData = (members) => {
-  return members.reduce((dataRefactored, curr) => {
-    const [name, url] = curr;
-    return dataRefactored.concat({
-      name,
-      url,
-      postCount: null,
-    });
-  }, []);
-};
-
-const fetchData = (data) => {
-  const dataWithPostCounts = data.map(async (d) => {
-    const { name, url } = d;
-    const postCount = await crawler(url);
-
-    return { name, url, postCount };
-  });
-
-  return Promise.all(dataWithPostCounts);
-};
+});
 
 const sortData = (data) => {
-  return data.sort((a ,b) => {
+  return data.sort((a, b) => {
     if (a.postCount === b.postCount) {
-      return a.name.localeCompare(b.name)
+      return a.name.localeCompare(b.name);
     } else {
-     return a.postCount - b.postCount
+      return a.postCount - b.postCount;
     }
-  })
-}
+  });
+};
+
+const initData = members.reduce((dataRefactored, curr) => {
+  const [name, url] = curr;
+  return dataRefactored.concat({
+    name,
+    url,
+    postCount: Infinity,
+  });
+}, []);
+
+const START_DATE = new Date('2020-09-13T00:00:00.000+08:00');
 
 const App = () => {
   const classes = useStyles();
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const membersRefactored = refactorData(members);
-    setData(membersRefactored);
-  }, []);
+  const [data, setData] = useState(initData);
+  const [isLoading, setIsLoading] = useState(true);
 
   // get days
-  let start = new Date('2020-09-13 00:00:00');
-  let now = new Date();
-  let diff = Math.floor((now - start) / 86400000);
+  const now = new Date();
+  const diff = Math.floor((now - START_DATE) / 86400000);
 
   useEffect(() => {
     if (data.length === 0) {
       return;
     }
-
-    const gotAllPosts = data.every(({ postCount }) => postCount);
-    if (gotAllPosts) {
-      setIsLoading(false)
-      return;
-    }
-
-    fetchData(data).then((res) => {
-      const sortedData = sortData(res)
-      setData(sortedData);
+    const queue = [];
+    data.forEach((member) => {
+      const { url, name } = member;
+      crawler(url).then((postCount) => {
+        queue.push({ name, postCount });
+      });
     });
-  }, [data]);
-
+    let count = 0;
+    const interval = setInterval(() => {
+      if (count >= data.length) {
+        return clearInterval(interval);
+      }
+      if (queue.length === 0) {
+        return setIsLoading(true);
+      }
+      setIsLoading(false);
+      const { postCount, name } = queue.shift();
+      count++;
+      setData((data) => {
+        const newData = [...data];
+        const index = newData.findIndex((m) => m.name === name);
+        const newMemberData = { ...newData[index] };
+        newMemberData.postCount = Number(postCount);
+        newData[index] = newMemberData;
+        return newData;
+      });
+    }, 200);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <AppContainer>
       <Spinner isLoading={isLoading} />
@@ -157,29 +163,48 @@ const App = () => {
         <Days>
           開賽第
           <Moment diff="2020-09-13" unit="days">
-             {new Date()}
+            {new Date()}
           </Moment>
           天
         </Days>
       </TitleContainer>
-      { data.length > 0 && (
+      {data.length > 0 && (
         <TableWrapper>
           <TableContainer component={Paper} className={classes.table}>
             <Table size="small" aria-label="a dense table">
               <TableHead className={classes.header}>
                 <TableRow>
                   <TableCell className={classes.headerCell}>Name</TableCell>
-                  <TableCell align="right" className={classes.headerCell}>Posts</TableCell>
+                  <TableCell align="right" className={classes.headerCell}>
+                    Posts
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map(({ name, url, postCount }) => (
-                  <TableRow key={name} className={(diff === Number(postCount)) ? null : ( postCount ? classes.drow : null)}>
-                    <TableCell component="th" scope="row" className={classes.cell}>
-                      <LinkToPage><a href={url} target="_blank" rel="noopener noreferrer">{name}</a></LinkToPage>
+                {sortData(data).map(({ name, url, postCount }) => (
+                  <TableRow
+                    key={name}
+                    className={
+                      diff === Number(postCount)
+                        ? null
+                        : postCount
+                        ? classes.drow
+                        : null
+                    }
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      className={classes.cell}
+                    >
+                      <LinkToPage>
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                          {name}
+                        </a>
+                      </LinkToPage>
                     </TableCell>
                     <TableCell align="right" className={classes.cell}>
-                      {postCount}
+                      {Number.isFinite(postCount) ? postCount : '--'}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -189,7 +214,7 @@ const App = () => {
         </TableWrapper>
       )}
     </AppContainer>
-  )
-}
+  );
+};
 
-export default App
+export default App;

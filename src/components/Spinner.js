@@ -1,14 +1,14 @@
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import styled from 'styled-components'
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
 
 const useStyles = makeStyles({
   styledProgress: {
     color: 'rgb(255, 102, 0)',
   },
-})
+});
 const Spinner = styled.div`
   position: fixed;
   width: 100vw;
@@ -22,24 +22,24 @@ const Spinner = styled.div`
   align-items: center;
   background-color: rgba(0, 0, 0, 0.25);
   z-index: 999;
-`
+`;
 
-const LoadingMask = ({isLoading}) => {
-  const classes = useStyles()
+const LoadingMask = ({ isLoading }) => {
+  const classes = useStyles();
 
   return (
-    <Spinner style={{ display: isLoading ? "flex" : "none" }}>
+    <Spinner style={{ display: isLoading ? 'flex' : 'none' }}>
       <Fade
-          in={isLoading}
-          style={{
-            transitionDelay: isLoading ? '800ms' : '0ms',
-          }}
-          unmountOnExit
-        >
-          <CircularProgress classes={{ root: classes.styledProgress }} />
-        </Fade>
-    </Spinner >
-  )
-}
+        in={isLoading}
+        style={{
+          transitionDuration: 500,
+        }}
+        unmountOnExit
+      >
+        <CircularProgress classes={{ root: classes.styledProgress }} />
+      </Fade>
+    </Spinner>
+  );
+};
 
-export default LoadingMask
+export default LoadingMask;
