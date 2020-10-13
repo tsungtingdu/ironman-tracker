@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/ironman-tracker/precache-manifest.01d90b3381ff18f36fd47f46e8f0c7a1.js"
+  "/ironman-tracker/precache-manifest.00d62d616fb89505294dc94b6f3b3053.js"
 );
 
 self.addEventListener('message', (event) => {
