@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,15 +6,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import Moment from 'react-moment';
-import Paper from '@material-ui/core/Paper';
-import Spinner from './components/Spinner';
-import crawler from './utils/crawler';
-import { makeStyles } from '@material-ui/core/styles';
-import members from './data/members';
-import styled from 'styled-components';
+import Moment from "react-moment";
+import Paper from "@material-ui/core/Paper";
+import Spinner from "./components/Spinner";
+import crawler from "./utils/crawler";
+import { makeStyles } from "@material-ui/core/styles";
+import members from "./data/members";
+import styled from "styled-components";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -68,27 +68,27 @@ const TableWrapper = styled.div`
 
 const useStyles = makeStyles({
   table: {
-    width: '100%',
+    width: "100%",
   },
   header: {
-    backgroundColor: '#333333',
+    backgroundColor: "#333333",
   },
   headerCell: {
-    color: '#ffffff',
-    fontFamily: 'Source Code Pro',
-    fontWeight: '700',
+    color: "#ffffff",
+    fontFamily: "Source Code Pro",
+    fontWeight: "700",
   },
   cell: {
-    fontFamily: 'Source Code Pro',
-    fontWeight: '700',
+    fontFamily: "Source Code Pro",
+    fontWeight: "700",
   },
   drow: {
-    backgroundColor: '#ffcbcb',
+    backgroundColor: "#ffcbcb",
   },
   styledProgress: {
-    color: '#282c34',
-    height: '20px !important',
-    width: '20px !important',
+    color: "#282c34",
+    height: "20px !important",
+    width: "20px !important",
   },
 });
 
@@ -111,7 +111,7 @@ const initData = members.reduce((dataRefactored, curr) => {
   });
 }, []);
 
-const START_DATE = new Date('2020-09-13T00:00:00.000+08:00');
+const START_DATE = new Date("2020-09-13T00:00:00.000+08:00");
 
 const App = () => {
   const classes = useStyles();
@@ -185,7 +185,7 @@ const App = () => {
                   <TableRow
                     key={name}
                     className={
-                      diff === Number(postCount)
+                      diff <= Number(postCount)
                         ? null
                         : postCount
                         ? classes.drow
@@ -204,7 +204,7 @@ const App = () => {
                       </LinkToPage>
                     </TableCell>
                     <TableCell align="right" className={classes.cell}>
-                      {Number.isFinite(postCount) ? postCount : '--'}
+                      {Number.isFinite(postCount) ? postCount : "--"}
                     </TableCell>
                   </TableRow>
                 ))}
