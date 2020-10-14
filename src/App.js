@@ -32,7 +32,7 @@ const TitleContainer = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
-  height: 100px;
+  height: 500px;
   top: 0;
   right: 0;
   bottom: 0;
@@ -41,6 +41,7 @@ const TitleContainer = styled.div`
   padding: 20px;
 `;
 const TeamName = styled.div`
+  margin-top: 2rem;
   font-size: 30px;
   font-weight: 700;
 `;
@@ -60,10 +61,21 @@ const LinkToPage = styled.div`
 `;
 const TableWrapper = styled.div`
   width: 50%;
-  margin-top: 100px;
+  margin-top: 500px;
   border: 1px solid #ffffff;
   border-radius: 4px;
   margin-bottom: 50px;
+`;
+
+const RecordImg = styled.div`
+  display: flex;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 20px 0;
+  img {
+    margin: 0 auto;
+    width: 48%;
+  }
 `;
 
 const useStyles = makeStyles({
@@ -120,7 +132,11 @@ const App = () => {
 
   // get days
   const now = new Date();
-  const diff = Math.floor((now - START_DATE) / 86400000);
+
+  // during the competition
+  // const diff = Math.floor((now - START_DATE) / 86400000);
+  // after the competition
+  const diff = 0;
 
   useEffect(() => {
     if (data.length === 0) {
@@ -160,14 +176,18 @@ const App = () => {
       <Spinner isLoading={isLoading} />
       <TitleContainer>
         <TeamName>#OutcomeFirst</TeamName>
-        <Days>
+        {/* <Days>
           開賽第
           <Moment diff="2020-09-13" unit="days">
             {new Date()}
           </Moment>
           天
-        </Days>
+        </Days> */}
+        <RecordImg>
+          <img src="https://i.imgur.com/bzS39xE.png" alt="record" />
+        </RecordImg>
       </TitleContainer>
+
       {data.length > 0 && (
         <TableWrapper>
           <TableContainer component={Paper} className={classes.table}>
